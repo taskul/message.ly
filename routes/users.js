@@ -10,8 +10,8 @@ const {ensureCorrectUser} = require('../middleware/auth');
  **/
 router.get('/', async (req, res, next) => {
     try{
-        const allUsers = await User.all();
-        return res.json({users: allUsers})
+        let users = await User.all();
+        return res.json({users})
     } catch (e) {
         return next(e)
     }
@@ -25,8 +25,8 @@ router.get('/', async (req, res, next) => {
  **/
 router.get('/:username', ensureCorrectUser, async (req, res, next) => {
     try {
-        const user = await User.get(req.params.username);
-        return res.json({user: user})
+        let user = await User.get(req.params.username);
+        return res.json({user});
     } catch (e) {
         return next(e)
     }
