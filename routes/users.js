@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-const {ensureCorrectUser} = require('../middleware/auth');
+const {ensureCorrectUser, authenticateJWT} = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
 
 /** GET / - get list of users.
  *
@@ -26,7 +27,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:username', ensureCorrectUser, async (req, res, next) => {
     try {
         let user = await User.get(req.params.username);
-        return res.json({user});
+        return res.render('user/profile.html', {user})
     } catch (e) {
         return next(e)
     }

@@ -1,22 +1,38 @@
 /** Express app for message.ly. */
-
 const express = require("express");
 const cors = require("cors");
 const { authenticateJWT } = require("./middleware/auth");
-
+const nunjucks = require('nunjucks');
+const session = require('express-session')
 const ExpressError = require("./expressError")
 const app = express();
+const {SECRET_KEY_2} = require('./config')
 
 // allow both form-encoded and json body parsing
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-// allow connections to all routes from any browser
-app.use(cors());
+//HTML templating
+nunjucks.configure("templates", {
+  autoescape:true,
+  express:app
+});
+
+// setting so we could use static folder directory for CSS and JS files
+app.use(express.static(__dirname + '/'));
+
+app.use(session({
+  secret: SECRET_KEY_2,
+  resave: false,
+  saveUninitialized: true
+}))
+
 
 // get auth token for all routes
 app.use(authenticateJWT);
 
+// allow connections to all routes from any browser
+app.use(cors());
 /** routes */
 
 const authRoutes = require("./routes/auth");
@@ -26,6 +42,10 @@ const messageRoutes = require("./routes/messages");
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
+
+app.get('/', async (req, res, next) => {
+  return res.render('index.html')
+})
 
 /** 404 handler */
 

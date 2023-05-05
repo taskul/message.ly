@@ -21,6 +21,11 @@ describe("Auth Routes Test", function () {
     });
   });
 
+    // close all db connections
+    afterAll(async () => {
+    await db.end();
+})
+
   /** POST /auth/register => token  */
 
   describe("POST /auth/register", function () {
