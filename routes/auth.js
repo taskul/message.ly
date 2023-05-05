@@ -77,11 +77,11 @@ router.post('/register', async (req, res, next) => {
         const user = await User.register({username, password, first_name, last_name, phone});
         let token = jwt.sign({username}, SECRET_KEY);
         User.updateLoginTimestamp(username)
-        res.cookie('token', token, {
-            httpOnly: true,
-            maxAge: 5000,
-            sameSite:'strict',
-        })
+        // adding token to the session
+        req.session.token = token;
+        // 60000 is one minute
+        // setting expiration time to 30 seconds to make it easier to test
+        req.session.cookie.maxAge = 30000;
         return res.status(302).redirect(`/users/${username}`);
     
     } catch (e) {

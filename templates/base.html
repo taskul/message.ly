@@ -40,8 +40,14 @@
         </div>
       </nav>
     <div class="container">
+        {% if errors %} 
+            {{ errors[0] }}
+            {{ errors[1] }}
+        {% endif %}
         {% block content %}{% endblock %}
     </div>
+
+
 
 <script src="https://unpkg.com/axios/dist/axios.js"></script>
 <script src="/static/base.js"></script>

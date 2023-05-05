@@ -60,10 +60,13 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   if (process.env.NODE_ENV != "test") console.error(err.stack);
 
-  return res.json({
-    error: err,
-    message: err.message
-  });
+  // return res.json({
+  //   error: err,
+  //   message: err.message
+  // });
+  
+  // more friendly messages that are sent to the client
+  return res.render('base.html', {errors :[err.status, err.message]})
 });
 
 
